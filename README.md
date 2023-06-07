@@ -1,6 +1,6 @@
 - 👋 Hi, I’m Chester
-- 👀 I’m interested in  Java Spring  Mysql ...
-- 🌱 I’m currently learning Go
+- 🤔 I'm a backend developer, primarily skilled in Java programming language
+- 🌱 I'm currently learning Go, and next, I plan to study Rust.
 - 📫 saymealoud@gmail.com
 
 <!---
