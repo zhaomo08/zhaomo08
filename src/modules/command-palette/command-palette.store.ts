@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import _ from 'lodash';
+import Fuse from 'fuse.js';
 import type { PaletteOption } from './command-palette.types';
 import { useToolStore } from '@/tools/tools.store';
-import { useFuzzySearch } from '@/composable/fuzzySearch';
 import { useStyleStore } from '@/stores/style.store';
 
 import SunIcon from '~icons/mdi/white-balance-sunny';
@@ -15,70 +15,71 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
   const toolStore = useToolStore();
   const styleStore = useStyleStore();
   const router = useRouter();
+  const { t } = useI18n();
   const searchPrompt = ref('');
 
-  const toolsOptions = toolStore.tools.map(tool => ({
+  const toolsOptions = computed<PaletteOption[]>(() => toolStore.tools.map(tool => ({
     ...tool,
     to: tool.path,
     toolCategory: tool.category,
-    category: 'Tools',
-  }));
+    category: t('search.categories.tools', 'Tools'),
+  })));
 
-  const searchOptions: PaletteOption[] = [
-    ...toolsOptions,
+  const searchOptions = computed<PaletteOption[]>(() => [
+    ...toolsOptions.value,
     {
-      name: 'Random tool',
-      description: 'Get a random tool from the list.',
+      name: t('search.options.randomTool.name', 'Random tool'),
+      description: t('search.options.randomTool.description', 'Get a random tool from the list.'),
       action: () => {
         const { path } = _.sample(toolStore.tools)!;
         router.push(path);
       },
       icon: DiceIcon,
-      category: 'Tools',
+      category: t('search.categories.tools', 'Tools'),
       keywords: ['random', 'tool', 'pick', 'choose', 'select'],
       closeOnSelect: true,
     },
     {
-      name: 'Toggle dark mode',
-      description: 'Toggle dark mode on or off.',
+      name: t('search.options.toggleDarkMode.name', 'Toggle dark mode'),
+      description: t('search.options.toggleDarkMode.description', 'Toggle dark mode on or off.'),
       action: () => styleStore.toggleDark(),
       icon: SunIcon,
-      category: 'Actions',
+      category: t('search.categories.actions', 'Actions'),
       keywords: ['dark', 'theme', 'toggle', 'mode', 'light', 'system'],
     },
     {
-      name: 'Github repository',
+      name: t('search.options.githubRepository.name', 'Github repository'),
       href: 'https://github.com/CorentinTh/it-tools',
-      category: 'External',
-      description: 'View the source code of it-tools on Github.',
+      category: t('search.categories.external', 'External'),
+      description: t('search.options.githubRepository.description', 'View the source code of it-tools on Github.'),
       keywords: ['github', 'repo', 'repository', 'source', 'code'],
       icon: GithubIcon,
     },
     {
-      name: 'Report a bug or an issue',
-      description: 'Report a bug or an issue to help improve it-tools.',
+      name: t('search.options.reportIssue.name', 'Report a bug or an issue'),
+      description: t('search.options.reportIssue.description', 'Report a bug or an issue to help improve it-tools.'),
       href: 'https://github.com/CorentinTh/it-tools/issues/new/choose',
-      category: 'Actions',
+      category: t('search.categories.actions', 'Actions'),
       keywords: ['report', 'issue', 'bug', 'problem', 'error'],
       icon: BugIcon,
     },
     {
-      name: 'About',
-      description: 'Learn more about IT-Tools.',
+      name: t('search.options.about.name', 'About'),
+      description: t('search.options.about.description', 'Learn more about IT-Tools.'),
       to: '/about',
-      category: 'Pages',
+      category: t('search.categories.pages', 'Pages'),
       keywords: ['about', 'learn', 'more', 'info', 'information'],
       icon: InfoIcon,
     },
-  ];
+  ]);
 
-  const { searchResult } = useFuzzySearch({
-    search: searchPrompt,
-    data: searchOptions,
-    options: {
+  const searchResult = computed(() => {
+    const fuse = new Fuse(searchOptions.value, {
       keys: [{ name: 'name', weight: 2 }, 'description', 'keywords', 'category'],
       threshold: 0.3,
-    },
+    });
+
+    return fuse.search(searchPrompt.value).map(({ item }) => item);
   });
 
   const filteredSearchResult = computed(() =>

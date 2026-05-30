@@ -57,6 +57,28 @@ toolCard:
   new: New
 search:
   label: Search
+  placeholder: Type to search a tool or a command...
+  categories:
+    tools: Tools
+    actions: Actions
+    external: External
+    pages: Pages
+  options:
+    randomTool:
+      name: Random tool
+      description: Get a random tool from the list.
+    toggleDarkMode:
+      name: Toggle dark mode
+      description: Toggle dark mode on or off.
+    githubRepository:
+      name: Github repository
+      description: View the source code of it-tools on Github.
+    reportIssue:
+      name: Report a bug or an issue
+      description: Report a bug or an issue to help improve it-tools.
+    about:
+      name: About
+      description: Learn more about IT-Tools.
 tools:
   categories:
     favorite-tools: 'Your favorite tools'
@@ -70,6 +92,7 @@ tools:
     measurement: Measurement
     text: Text
     data: Data
+    ai: AI
 
   password-strength-analyser:
     title: Password strength analyser
@@ -93,6 +116,188 @@ tools:
     button:
       copy: Copy
       refresh: Refresh
+  llm-token-cost-calculator:
+    title: LLM token & cost calculator
+    description: Estimate local prompt tokens, cached input savings, output cost, and context window usage for LLM calls.
+    sections:
+      promptPayload: Prompt payload
+      tokenEstimate: Token estimate
+      costResult: Cost result
+    placeholders:
+      prompt: Paste a prompt, system message, tool schema, or RAG context...
+    metrics:
+      inputTokens: Input tokens
+      characters: Characters
+      words: Words
+      cjkChars: CJK chars
+      perCall: per call
+      runRate30d: 30 day run-rate
+      remainingContext: Remaining context
+    fields:
+      expectedOutputTokens: Expected output tokens
+      callsPerDay: Calls per day
+      contextWindow: Context window
+      cachedInputHit: Cached input hit
+      inputPrice: Input $ / 1M tokens
+      cachedInputPrice: Cached input $ / 1M
+      outputPrice: Output $ / 1M tokens
+      batchDiscount: Batch discount
+
+  kv-cache-calculator:
+    title: KV cache calculator
+    description: Estimate transformer KV cache memory and prefix cache hit savings for long-context LLM workloads.
+    sections:
+      kvMemory: KV memory
+      result: Result
+      cacheEconomics: Prefix cache hit economics
+    options:
+      presets:
+        custom: Custom transformer
+        llama8b: Llama-style 8B GQA
+        llama70b: Llama-style 70B GQA
+        dense32: Dense 32 heads x 128
+      precision:
+        fp16: FP16 / BF16 (2 bytes)
+        fp8: FP8 / INT8 (1 byte)
+        int4: INT4 / FP4 (0.5 byte)
+    fields:
+      modelPreset: Model preset
+      tokensPerSequence: Tokens per sequence
+      concurrentSequences: Concurrent sequences
+      kvPrecision: KV precision
+      layers: Layers
+      kvHeads: KV heads
+      headDim: Head dim
+      requests: Requests
+      sharedPrefixTokens: Shared prefix tokens
+      variableInputTokens: Variable input tokens
+      outputTokens: Output tokens
+      cacheHit: Cache hit
+      inputPrice: Input $ / 1M
+      cachedPrice: Cached $ / 1M
+      outputPrice: Output $ / 1M
+    metrics:
+      totalKvCache: total KV cache
+      perToken: Per token
+      tokenBudget24: 24 GiB token budget
+      formula: layers x kv heads x head dim x K/V x precision x tokens x sequences
+      cachedTokens: Cached tokens
+      withCache: With cache
+      savings: Savings
+
+  llm-context-planner:
+    title: LLM context planner
+    description: Plan system prompts, tools, RAG chunks, history, and output reserve against a model context window.
+    status:
+      overBudget: Over budget
+      tight: Tight
+      healthy: Healthy
+    sections:
+      contextBudget: Context budget
+      fitCheck: Fit check
+      breakdown: Breakdown
+    fields:
+      contextWindow: Context window
+      systemPrompt: System prompt
+      toolSchemas: Tool schemas
+      conversationHistory: Conversation history
+      ragChunkTokens: RAG chunk tokens
+      ragChunks: RAG chunks
+      userTurn: User turn
+      outputReserve: Output reserve
+      safetyReserve: Safety reserve
+    metrics:
+      used: Used
+      remaining: Remaining
+      ragBudget: RAG budget
+      chunks: chunks
+    breakdown:
+      system: System
+      tools: Tools
+      history: History
+      rag: RAG
+      output: Output
+
+  prompt-variable-extractor:
+    title: Prompt variable extractor
+    description: Extract {{variable}} placeholders from prompt templates and generate a JSON payload scaffold.
+    sections:
+      input: Prompt template
+      variables: Detected variables
+      json: JSON example payload
+    placeholders:
+      template: Paste prompt template text with {{variable}} placeholders...
+    actions:
+      copyVariables: Copy variables
+      copyJson: Copy JSON
+    messages:
+      noVariables: No {{variable}} placeholders found.
+      variablesCopied: Variables copied to the clipboard
+      jsonCopied: JSON copied to the clipboard
+
+  prompt-template-renderer:
+    title: Prompt template renderer
+    description: Render prompt templates with JSON variables and highlight unresolved placeholders.
+    sections:
+      template: Prompt template
+      variables: Variables JSON
+      result: Rendered result
+    placeholders:
+      template: Use {{path.to.value}} placeholders in your template...
+      variablesJson: Provide a JSON object for placeholder values...
+    metrics:
+      detected: Detected placeholders
+      unresolved: Unresolved placeholders
+    actions:
+      copyRendered: Copy rendered prompt
+    messages:
+      invalidJson: 'Invalid JSON:'
+      renderedCopied: Rendered prompt copied to clipboard
+
+  jsonl-chat-builder:
+    title: JSONL chat builder
+    description: Build JSONL batch requests from multi-line prompts for chat completion APIs.
+    sections:
+      config: Batch config
+      userInputs: User prompts (one per line)
+      output: JSONL output
+    fields:
+      model: Model
+      temperature: Temperature
+      systemPrompt: System prompt
+    placeholders:
+      userInputs: One user prompt per line...
+    metrics:
+      requests: Requests
+      characters: Characters
+    actions:
+      copyJsonl: Copy JSONL
+    messages:
+      copied: JSONL copied to clipboard
+
+  json-output-key-checker:
+    title: JSON output key checker
+    description: Validate model JSON output against required keys and surface missing or extra fields.
+    status:
+      invalidJson: Invalid JSON
+      passed: Passed
+      failed: Missing required keys
+    sections:
+      requiredKeys: Required keys (one per line)
+      outputJson: Model JSON output
+      result: Validation result
+      missingKeys: Missing keys
+      extraKeys: Extra keys
+    metrics:
+      status: Status
+      requiredCount: Required key count
+      missingCount: Missing key count
+      extraCount: Extra key count
+    messages:
+      invalidJson: 'Invalid JSON:'
+      notObject: JSON value must be an object.
+      none: None
+
   percentage-calculator:
     title: Percentage calculator
     description: Easily calculate percentages from a value to another value, or from a percentage to a value.

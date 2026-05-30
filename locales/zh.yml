@@ -57,6 +57,28 @@ toolCard:
   new: '新'
 search:
   label: '搜索'
+  placeholder: '输入关键词搜索工具或命令...'
+  categories:
+    tools: '工具'
+    actions: '操作'
+    external: '外部链接'
+    pages: '页面'
+  options:
+    randomTool:
+      name: '随机工具'
+      description: '从工具列表中随机打开一个工具。'
+    toggleDarkMode:
+      name: '切换深色模式'
+      description: '开启或关闭深色模式。'
+    githubRepository:
+      name: 'GitHub 仓库'
+      description: '查看 it-tools 的 GitHub 源码仓库。'
+    reportIssue:
+      name: '反馈问题或缺陷'
+      description: '提交 issue 帮助改进 it-tools。'
+    about:
+      name: '关于'
+      description: '了解更多 IT-Tools 信息。'
 tools:
   categories:
     favorite-tools: '我的收藏'
@@ -70,6 +92,7 @@ tools:
     measurement: '测量'
     text: '文本'
     data: '数据'
+    ai: 'AI'
 
   password-strength-analyser:
     title: 密码强度分析仪
@@ -92,6 +115,188 @@ tools:
     button:
       copy: 复制
       refresh: 刷新
+  llm-token-cost-calculator:
+    title: LLM Token 与成本计算器
+    description: 在本地估算 Prompt Token、缓存输入节省、输出成本和上下文窗口占用。
+    sections:
+      promptPayload: 提示词内容
+      tokenEstimate: Token 估算
+      costResult: 成本结果
+    placeholders:
+      prompt: 粘贴提示词、系统消息、工具 schema 或 RAG 上下文...
+    metrics:
+      inputTokens: 输入 Token
+      characters: 字符数
+      words: 单词数
+      cjkChars: 中日韩字符
+      perCall: 每次调用
+      runRate30d: 30 天预计成本
+      remainingContext: 剩余上下文
+    fields:
+      expectedOutputTokens: 预计输出 Token
+      callsPerDay: 每日调用次数
+      contextWindow: 上下文窗口
+      cachedInputHit: 缓存输入命中
+      inputPrice: 输入价格（$/百万 Token）
+      cachedInputPrice: 缓存输入价格（$/百万）
+      outputPrice: 输出价格（$/百万 Token）
+      batchDiscount: 批量折扣
+
+  kv-cache-calculator:
+    title: KV Cache 计算器
+    description: 估算大模型 KV Cache 显存占用，并计算前缀缓存命中带来的成本节省。
+    sections:
+      kvMemory: KV 内存
+      result: 结果
+      cacheEconomics: 前缀缓存命中收益
+    options:
+      presets:
+        custom: 自定义 Transformer
+        llama8b: Llama 风格 8B GQA
+        llama70b: Llama 风格 70B GQA
+        dense32: 密集注意力 32 头 x 128
+      precision:
+        fp16: FP16 / BF16（2 字节）
+        fp8: FP8 / INT8（1 字节）
+        int4: INT4 / FP4（0.5 字节）
+    fields:
+      modelPreset: 模型预设
+      tokensPerSequence: 每序列 Token 数
+      concurrentSequences: 并发序列数
+      kvPrecision: KV 精度
+      layers: 层数
+      kvHeads: KV 头数
+      headDim: 头维度
+      requests: 请求数
+      sharedPrefixTokens: 共享前缀 Token
+      variableInputTokens: 可变输入 Token
+      outputTokens: 输出 Token
+      cacheHit: 缓存命中率
+      inputPrice: 输入价格（$/百万）
+      cachedPrice: 缓存价格（$/百万）
+      outputPrice: 输出价格（$/百万）
+    metrics:
+      totalKvCache: 总 KV Cache
+      perToken: 单 Token 占用
+      tokenBudget24: 24 GiB Token 预算
+      formula: 层数 x KV 头数 x 头维度 x K/V x 精度 x Token x 序列数
+      cachedTokens: 已缓存 Token
+      withCache: 启用缓存成本
+      savings: 节省金额
+
+  llm-context-planner:
+    title: LLM 上下文规划器
+    description: 按系统提示词、工具、RAG、历史消息和输出预留规划模型上下文窗口。
+    status:
+      overBudget: 超出预算
+      tight: 较紧张
+      healthy: 健康
+    sections:
+      contextBudget: 上下文预算
+      fitCheck: 匹配检查
+      breakdown: 构成拆分
+    fields:
+      contextWindow: 上下文窗口
+      systemPrompt: 系统提示词
+      toolSchemas: 工具 Schema
+      conversationHistory: 对话历史
+      ragChunkTokens: RAG 分块 Token
+      ragChunks: RAG 分块数
+      userTurn: 用户输入
+      outputReserve: 输出预留
+      safetyReserve: 安全预留
+    metrics:
+      used: 已使用
+      remaining: 剩余
+      ragBudget: RAG 预算
+      chunks: 分块
+    breakdown:
+      system: 系统
+      tools: 工具
+      history: 历史
+      rag: RAG
+      output: 输出
+
+  prompt-variable-extractor:
+    title: Prompt 变量提取器
+    description: 从提示词模板中提取 {{variable}} 占位符，并生成可直接填充的 JSON 载荷骨架。
+    sections:
+      input: 提示词模板
+      variables: 检测到的变量
+      json: JSON 示例载荷
+    placeholders:
+      template: 粘贴包含 {{variable}} 占位符的提示词模板...
+    actions:
+      copyVariables: 复制变量列表
+      copyJson: 复制 JSON
+    messages:
+      noVariables: 未找到 {{variable}} 占位符。
+      variablesCopied: 变量列表已复制到剪贴板
+      jsonCopied: JSON 已复制到剪贴板
+
+  prompt-template-renderer:
+    title: Prompt 模板渲染器
+    description: 使用 JSON 变量渲染 Prompt 模板，并标记未解析的占位符。
+    sections:
+      template: Prompt 模板
+      variables: 变量 JSON
+      result: 渲染结果
+    placeholders:
+      template: 在模板中使用 {{path.to.value}} 占位符...
+      variablesJson: 提供用于替换占位符的 JSON 对象...
+    metrics:
+      detected: 检测到的占位符
+      unresolved: 未解析占位符
+    actions:
+      copyRendered: 复制渲染结果
+    messages:
+      invalidJson: JSON 无效：
+      renderedCopied: 渲染后的 Prompt 已复制到剪贴板
+
+  jsonl-chat-builder:
+    title: JSONL 对话构建器
+    description: 将多行 Prompt 批量转换为对话补全 API 可用的 JSONL 请求。
+    sections:
+      config: 批处理配置
+      userInputs: 用户提示词（每行一条）
+      output: JSONL 输出
+    fields:
+      model: 模型
+      temperature: 温度
+      systemPrompt: 系统提示词
+    placeholders:
+      userInputs: 每行输入一条用户提示词...
+    metrics:
+      requests: 请求数
+      characters: 字符数
+    actions:
+      copyJsonl: 复制 JSONL
+    messages:
+      copied: JSONL 已复制到剪贴板
+
+  json-output-key-checker:
+    title: JSON 输出字段校验器
+    description: 按必填字段校验模型 JSON 输出，并提示缺失字段和多余字段。
+    status:
+      invalidJson: JSON 无效
+      passed: 校验通过
+      failed: 缺少必填字段
+    sections:
+      requiredKeys: 必填字段（每行一条）
+      outputJson: 模型 JSON 输出
+      result: 校验结果
+      missingKeys: 缺失字段
+      extraKeys: 多余字段
+    metrics:
+      status: 状态
+      requiredCount: 必填字段数
+      missingCount: 缺失字段数
+      extraCount: 多余字段数
+    messages:
+      invalidJson: JSON 无效：
+      notObject: JSON 值必须是对象。
+      none: 无
+
   percentage-calculator:
     title: 百分比计算器
     description: 轻松计算从一个值到另一个值的百分比，或从百分比到值的百分比。

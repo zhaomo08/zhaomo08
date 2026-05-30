@@ -31,6 +31,8 @@ import { tool as cameraRecorder } from './camera-recorder';
 import { tool as listConverter } from './list-converter';
 import { tool as phoneParserAndFormatter } from './phone-parser-and-formatter';
 import { tool as jsonDiff } from './json-diff';
+import { tool as jsonOutputKeyChecker } from './json-output-key-checker';
+import { tool as jsonlChatBuilder } from './jsonl-chat-builder';
 import { tool as ipv4RangeExpander } from './ipv4-range-expander';
 import { tool as httpStatusCodes } from './http-status-codes';
 import { tool as yamlToJson } from './yaml-to-json-converter';
@@ -66,6 +68,11 @@ import { tool as htmlEntities } from './html-entities';
 import { tool as baseConverter } from './integer-base-converter';
 import { tool as jsonViewer } from './json-viewer';
 import { tool as jwtParser } from './jwt-parser';
+import { tool as kvCacheCalculator } from './kv-cache-calculator';
+import { tool as llmContextPlanner } from './llm-context-planner';
+import { tool as llmTokenCostCalculator } from './llm-token-cost-calculator';
+import { tool as promptTemplateRenderer } from './prompt-template-renderer';
+import { tool as promptVariableExtractor } from './prompt-variable-extractor';
 import { tool as loremIpsumGenerator } from './lorem-ipsum-generator';
 import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
@@ -189,6 +196,18 @@ export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Data',
     components: [phoneParserAndFormatter, ibanValidatorAndParser],
+  },
+  {
+    name: 'AI',
+    components: [
+      llmTokenCostCalculator,
+      kvCacheCalculator,
+      llmContextPlanner,
+      promptVariableExtractor,
+      promptTemplateRenderer,
+      jsonlChatBuilder,
+      jsonOutputKeyChecker,
+    ],
   },
 ];
 
