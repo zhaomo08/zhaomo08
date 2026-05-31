@@ -157,23 +157,35 @@ const tools = computed<ToolCategory[]>(() => [
 // }
 
 .support-button {
-  background: rgb(37, 99, 108);
-  background: linear-gradient(48deg, rgba(37, 99, 108, 1) 0%, rgba(59, 149, 111, 1) 60%, rgba(20, 160, 88, 1) 100%);
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 60%, #0ea5e9 100%);
   color: #fff !important;
-  transition: padding ease 0.2s !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all ease 0.2s !important;
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.3);
 
   &:hover {
     color: #fff;
     padding-left: 30px;
     padding-right: 30px;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+    transform: translateY(-1px);
   }
 }
 
 .footer {
   text-align: center;
-  color: #838587;
+  color: #525a64;
+  font-size: 11px;
   margin-top: 20px;
   padding: 20px 0;
+  letter-spacing: 0.01em;
+
+  a {
+    opacity: 0.7;
+    transition: opacity 0.15s;
+    &:hover { opacity: 1; }
+  }
 }
 
 .sider-content {
@@ -198,24 +210,32 @@ const tools = computed<ToolCategory[]>(() => [
     left: 0;
     width: 100%;
     text-align: center;
-    top: 16px;
+    top: 14px;
     color: #fff;
 
     .title {
-      font-size: 25px;
-      font-weight: 600;
+      font-family: 'Space Mono', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
     }
 
     .divider {
-      width: 50px;
+      width: 36px;
       height: 2px;
-      border-radius: 4px;
-      background-color: v-bind('themeVars.primaryColor');
-      margin: 0 auto 5px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #22c55e, #0ea5e9);
+      margin: 6px auto 6px;
+      opacity: 0.9;
     }
 
     .subtitle {
-      font-size: 16px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      opacity: 0.85;
     }
   }
 }

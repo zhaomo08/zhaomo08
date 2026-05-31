@@ -1,23 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 275">
   <defs>
-    <linearGradient id="small-hero-gradient-1" x1="13.74" y1="183.7" x2="303.96" y2="45.59" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#25636c"/>
-      <stop offset="0.6" stop-color="#3b956f"/>
-      <stop offset="1" stop-color="#14a058"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="150" y2="275" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#091a2e"/>
+      <stop offset="0.45" stop-color="#0a3320"/>
+      <stop offset="1" stop-color="#14532d"/>
     </linearGradient>
+    <linearGradient id="shimmer" x1="300" y1="0" x2="0" y2="275" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="0.18"/>
+      <stop offset="0.5" stop-color="#0ea5e9" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="wave1g" x1="0" y1="0" x2="300" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#0ea5e9" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="wave2g" x1="300" y1="0" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4ade80" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#22c55e" stop-opacity="0.1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="75%" cy="25%" r="55%" gradientUnits="userSpaceOnUse"
+      fx="75%" fy="25%">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <g>
-    <g>
-      <path fill="#14a058" opacity="0.49" d="M0,187.5v25s0,37.5,50,50S300,225,300,225V187.5Z"/>
-    </g>
-    <g>
-      <path fill="#14a058" opacity="0.49" d="M300,237.5S287.5,275,250,275,121.05,237.5,61.4,200s134.21,0,134.21,0Z"/>
-    </g>
-    <g>
-      <path fill="#14a058" opacity="0.38" d="M0,200v12.5a241.47,241.47,0,0,0,112.5,50c73.6,11.69,130.61-14.86,150-25L300,200Z"/>
-    </g>
-    <g>
-      <path fill="url(#small-hero-gradient-1)" d="M0,0V212.5s62.5-12.5,150,25,150,0,150,0V0Z"/>
-    </g>
+
+  <!-- Deep base -->
+  <rect width="300" height="275" fill="url(#bg)"/>
+  <!-- Ambient glow from top-right -->
+  <rect width="300" height="275" fill="url(#glow)"/>
+  <!-- Shimmer overlay -->
+  <rect width="300" height="275" fill="url(#shimmer)"/>
+
+  <!-- Subtle dot grid texture -->
+  <g fill="#4ade80" opacity="0.055">
+    <circle cx="24" cy="24" r="1.4"/><circle cx="66" cy="24" r="1.4"/><circle cx="108" cy="24" r="1.4"/>
+    <circle cx="150" cy="24" r="1.4"/><circle cx="192" cy="24" r="1.4"/><circle cx="234" cy="24" r="1.4"/>
+    <circle cx="276" cy="24" r="1.4"/>
+    <circle cx="24" cy="66" r="1.4"/><circle cx="66" cy="66" r="1.4"/><circle cx="108" cy="66" r="1.4"/>
+    <circle cx="150" cy="66" r="1.4"/><circle cx="192" cy="66" r="1.4"/><circle cx="234" cy="66" r="1.4"/>
+    <circle cx="276" cy="66" r="1.4"/>
+    <circle cx="24" cy="108" r="1.4"/><circle cx="66" cy="108" r="1.4"/><circle cx="108" cy="108" r="1.4"/>
+    <circle cx="150" cy="108" r="1.4"/><circle cx="192" cy="108" r="1.4"/><circle cx="234" cy="108" r="1.4"/>
+    <circle cx="276" cy="108" r="1.4"/>
   </g>
+
+  <!-- Accent divider line -->
+  <line x1="20" y1="152" x2="280" y2="152" stroke="#22c55e" stroke-width="0.6" stroke-opacity="0.25"/>
+
+  <!-- Wave layers -->
+  <path fill="url(#wave1g)" d="M0,175 C55,152 115,198 175,168 C225,142 270,172 300,162 V275 H0Z"/>
+  <path fill="url(#wave2g)" d="M0,205 C70,186 145,228 215,200 C258,184 282,207 300,202 V275 H0Z"/>
 </svg>

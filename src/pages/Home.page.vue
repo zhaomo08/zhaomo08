@@ -92,37 +92,68 @@ function onUpdateFavoriteTools() {
 </template>
 
 <style scoped lang="less">
-.ai-section {
-  margin-top: 25px;
-  margin-bottom: 4px;
-  padding: 16px 20px 20px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(99, 179, 237, 0.25);
-  background: linear-gradient(135deg, rgba(99, 179, 237, 0.04) 0%, rgba(154, 117, 234, 0.04) 100%);
+/* ── AI section aurora border ── */
+@keyframes aurora-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-  .dark & {
-    border-color: rgba(99, 179, 237, 0.15);
-    background: linear-gradient(135deg, rgba(99, 179, 237, 0.06) 0%, rgba(154, 117, 234, 0.06) 100%);
+.ai-section {
+  position: relative;
+  margin-top: 28px;
+  margin-bottom: 4px;
+  padding: 18px 20px 22px;
+  border-radius: 14px;
+  z-index: 0;
+  background: rgba(56, 189, 248, 0.035);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 15.5px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #f472b6, #38bdf8);
+    background-size: 300% 300%;
+    animation: aurora-shift 5s linear infinite;
+    z-index: -1;
+    opacity: 0.6;
   }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 13px;
+    background: #f4f6f4;
+    z-index: -1;
+  }
+}
+
+.dark .ai-section::after {
+  background: #0d1117;
 }
 
 .ai-section-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: linear-gradient(90deg, #63b3ed, #9a75ea);
+  gap: 7px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #38bdf8, #818cf8 60%, #c084fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .ai-section-icon {
-  color: #63b3ed;
+  color: #38bdf8;
   -webkit-text-fill-color: initial;
   flex-shrink: 0;
+  opacity: 0.9;
 }
 .height-enter-active,
 .height-leave-active {
