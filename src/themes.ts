@@ -6,8 +6,8 @@ export const lightThemeOverrides: GlobalThemeOverrides = {
     primaryColorHover: '#22c55eFF',
     primaryColorPressed: '#15803dFF',
     primaryColorSuppl: '#22c55eFF',
-    fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    fontFamilyMono: "'Space Mono', 'JetBrains Mono', ui-monospace, monospace",
+    fontFamily: '\'DM Sans\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif',
+    fontFamilyMono: '\'Space Mono\', \'JetBrains Mono\', ui-monospace, monospace',
     borderRadius: '8px',
   },
   Menu: {
@@ -31,8 +31,8 @@ export const darkThemeOverrides: GlobalThemeOverrides = {
     primaryColorHover: '#4ade80FF',
     primaryColorPressed: '#16a34aFF',
     primaryColorSuppl: '#4ade80FF',
-    fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    fontFamilyMono: "'Space Mono', 'JetBrains Mono', ui-monospace, monospace",
+    fontFamily: '\'DM Sans\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', sans-serif',
+    fontFamilyMono: '\'Space Mono\', \'JetBrains Mono\', ui-monospace, monospace',
     borderRadius: '8px',
   },
 
