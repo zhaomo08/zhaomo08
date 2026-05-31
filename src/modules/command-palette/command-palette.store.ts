@@ -49,7 +49,7 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
     },
     {
       name: t('search.options.githubRepository.name', 'Github repository'),
-      href: 'https://github.com/CorentinTh/it-tools',
+      href: 'https://github.com/zhaomo08/it-tools',
       category: t('search.categories.external', 'External'),
       description: t('search.options.githubRepository.description', 'View the source code of it-tools on Github.'),
       keywords: ['github', 'repo', 'repository', 'source', 'code'],
@@ -58,7 +58,7 @@ export const useCommandPaletteStore = defineStore('command-palette', () => {
     {
       name: t('search.options.reportIssue.name', 'Report a bug or an issue'),
       description: t('search.options.reportIssue.description', 'Report a bug or an issue to help improve it-tools.'),
-      href: 'https://github.com/CorentinTh/it-tools/issues/new/choose',
+      href: 'https://github.com/zhaomo08/it-tools/issues/new/choose',
       category: t('search.categories.actions', 'Actions'),
       keywords: ['report', 'issue', 'bug', 'problem', 'error'],
       icon: BugIcon,

@@ -12,11 +12,11 @@ home:
   support: 'Star on GitHub'
   buyMeACoffee: 'Star'
   follow:
-    title: 'You like it-tools?'
+    title: 'Like it-tools?'
     p1: 'Give us a star on'
-    githubRepository: 'IT-Tools GitHub repository'
-    p2: 'or follow us on'
-    twitterXAccount: 'IT-Tools X account'
+    githubRepository: 'zhaomo08/it-tools on GitHub'
+    p2: ''
+    twitterXAccount: ''
     thankYou: 'Thank you!'
   nav:
     github: 'GitHub repository'

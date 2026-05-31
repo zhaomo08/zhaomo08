@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconDragDrop, IconHeart } from '@tabler/icons-vue';
+import { IconDragDrop, IconHeart, IconSparkles } from '@tabler/icons-vue';
 import { useHead } from '@vueuse/head';
 import { computed } from 'vue';
 import Draggable from 'vuedraggable';
@@ -30,18 +30,11 @@ function onUpdateFavoriteTools() {
         <ColoredCard v-if="config.showBanner" :title="$t('home.follow.title')" :icon="IconHeart">
           {{ $t('home.follow.p1') }}
           <a
-            href="https://github.com/CorentinTh/it-tools"
-            rel="noopener"
+            href="https://github.com/zhaomo08/it-tools"
+            rel="noopener noreferrer"
             target="_blank"
             :aria-label="$t('home.follow.githubRepository')"
           >GitHub</a>
-          {{ $t('home.follow.p2') }}
-          <a
-            href="https://x.com/ittoolsdottech"
-            rel="noopener"
-            target="_blank"
-            :aria-label="$t('home.follow.twitterXAccount')"
-          >X</a>.
           {{ $t('home.follow.thankYou') }}
           <n-icon :component="IconHeart" />
         </ColoredCard>
@@ -69,8 +62,9 @@ function onUpdateFavoriteTools() {
         </div>
       </transition>
 
-      <div v-if="toolStore.aiTools.length > 0">
-        <h3 class="mb-5px mt-25px text-neutral-400 font-500">
+      <div v-if="toolStore.aiTools.length > 0" class="ai-section">
+        <h3 class="ai-section-title">
+          <n-icon :component="IconSparkles" size="18" class="ai-section-icon" />
           {{ t('home.categories.aiTools') }}
         </h3>
         <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -98,6 +92,38 @@ function onUpdateFavoriteTools() {
 </template>
 
 <style scoped lang="less">
+.ai-section {
+  margin-top: 25px;
+  margin-bottom: 4px;
+  padding: 16px 20px 20px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(99, 179, 237, 0.25);
+  background: linear-gradient(135deg, rgba(99, 179, 237, 0.04) 0%, rgba(154, 117, 234, 0.04) 100%);
+
+  .dark & {
+    border-color: rgba(99, 179, 237, 0.15);
+    background: linear-gradient(135deg, rgba(99, 179, 237, 0.06) 0%, rgba(154, 117, 234, 0.06) 100%);
+  }
+}
+
+.ai-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: linear-gradient(90deg, #63b3ed, #9a75ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ai-section-icon {
+  color: #63b3ed;
+  -webkit-text-fill-color: initial;
+  flex-shrink: 0;
+}
 .height-enter-active,
 .height-leave-active {
   transition: all 0.5s ease-in-out;

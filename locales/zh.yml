@@ -12,12 +12,12 @@ home:
   support: '在 GitHub 上 Star'
   buyMeACoffee: 'Star'
   follow:
-    title: '关注我们'
-    p1: '给我们 Star'
-    githubRepository: 'GitHub 仓库'
-    p2: '关注我们的'
-    twitterXAccount: 'IT-Tools X 账号'
-    thankYou: '感谢您的支持！'
+    title: '如果你喜欢这个项目'
+    p1: '在 GitHub 上给我们一个 Star'
+    githubRepository: 'zhaomo08/it-tools on GitHub'
+    p2: ''
+    twitterXAccount: ''
+    thankYou: '感谢支持！'
   nav:
     github: 'GitHub 仓库'
     githubRepository: 'zhaomo08/it-tools on GitHub'

@@ -12,9 +12,14 @@ const isAiTool = computed(() => tool.value.category === t('tools.categories.ai',
 
 <template>
   <router-link :to="tool.path" class="decoration-none">
-    <c-card class="h-full transition transition-duration-0.5s !border-2px !hover:border-primary">
+    <c-card class="h-full transition transition-duration-0.5s !border-2px !hover:border-primary" :class="{ 'ai-tool-card': isAiTool }">
+      <div v-if="isAiTool" class="ai-card-bar" />
       <div flex items-center justify-between>
-        <n-icon class="text-neutral-400 dark:text-neutral-600" size="40" :component="tool.icon" />
+        <n-icon
+          size="40"
+          :component="tool.icon"
+          :class="isAiTool ? 'ai-tool-icon' : 'text-neutral-400 dark:text-neutral-600'"
+        />
 
         <div flex items-center gap-8px>
           <div
@@ -35,15 +40,30 @@ const isAiTool = computed(() => tool.value.category === t('tools.categories.ai',
         {{ tool.name }}
       </div>
 
-      <div v-if="isAiTool" class="mb-8px">
-        <n-tag size="small" type="info" round>
-          {{ $t('toolCard.aiBadge') }}
-        </n-tag>
-      </div>
-
       <div class="line-clamp-2 text-neutral-500 dark:text-neutral-400">
         {{ tool.description }}
       </div>
     </c-card>
   </router-link>
 </template>
+
+<style scoped lang="less">
+.ai-tool-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-card-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #63b3ed, #9a75ea);
+  border-radius: 2px 0 0 2px;
+}
+
+.ai-tool-icon {
+  color: #63b3ed;
+}
+</style>
