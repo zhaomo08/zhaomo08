@@ -14,6 +14,8 @@ useHead({ title: 'IT Tools - Handy online tools for developers' });
 const { t } = useI18n();
 
 const favoriteTools = computed(() => toolStore.favoriteTools);
+const aiCategoryName = computed(() => t('tools.categories.ai', 'AI'));
+const allToolsExceptAi = computed(() => toolStore.tools.filter(tool => tool.category !== aiCategoryName.value));
 
 // Update favorite tools order when drag is finished
 function onUpdateFavoriteTools() {
@@ -67,6 +69,15 @@ function onUpdateFavoriteTools() {
         </div>
       </transition>
 
+      <div v-if="toolStore.aiTools.length > 0">
+        <h3 class="mb-5px mt-25px text-neutral-400 font-500">
+          {{ t('home.categories.aiTools') }}
+        </h3>
+        <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ToolCard v-for="tool in toolStore.aiTools" :key="`ai-${tool.name}`" :tool="tool" />
+        </div>
+      </div>
+
       <div v-if="toolStore.newTools.length > 0">
         <h3 class="mb-5px mt-25px text-neutral-400 font-500">
           {{ t('home.categories.newestTools') }}
@@ -80,7 +91,7 @@ function onUpdateFavoriteTools() {
         {{ $t('home.categories.allTools') }}
       </h3>
       <div class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
-        <ToolCard v-for="tool in toolStore.tools" :key="tool.name" :tool="tool" />
+        <ToolCard v-for="tool in allToolsExceptAi" :key="tool.name" :tool="tool" />
       </div>
     </div>
   </div>

@@ -6,6 +6,8 @@ import type { Tool } from '@/tools/tools.types';
 const props = defineProps<{ tool: Tool & { category: string } }>();
 const { tool } = toRefs(props);
 const theme = useThemeVars();
+const { t } = useI18n();
+const isAiTool = computed(() => tool.value.category === t('tools.categories.ai', 'AI'));
 </script>
 
 <template>
@@ -31,6 +33,12 @@ const theme = useThemeVars();
 
       <div class="truncat my-5px text-lg text-black dark:text-white">
         {{ tool.name }}
+      </div>
+
+      <div v-if="isAiTool" class="mb-8px">
+        <n-tag size="small" type="info" round>
+          {{ $t('toolCard.aiBadge') }}
+        </n-tag>
       </div>
 
       <div class="line-clamp-2 text-neutral-500 dark:text-neutral-400">

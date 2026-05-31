@@ -123,8 +123,8 @@ const tools = computed<ToolCategory[]>(() => [
         <c-tooltip position="bottom" :tooltip="$t('home.support')">
           <c-button
             round
-            href="https://www.buymeacoffee.com/cthmsst"
-            rel="noopener"
+            href="https://github.com/zhaomo08/it-tools"
+            rel="noopener noreferrer"
             target="_blank"
             class="support-button"
             :bordered="false"

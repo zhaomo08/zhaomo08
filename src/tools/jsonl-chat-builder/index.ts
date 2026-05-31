@@ -1,4 +1,4 @@
-import { Calculator } from '@vicons/tabler';
+import { Messages } from '@vicons/tabler';
 import { defineTool } from '../tool';
 import { translate } from '@/plugins/i18n.plugin';
 
@@ -8,6 +8,6 @@ export const tool = defineTool({
   description: translate('tools.jsonl-chat-builder.description'),
   keywords: ['ai', 'llm', 'jsonl', 'batch', 'chat', 'dataset', 'openai'],
   component: () => import('./jsonl-chat-builder.vue'),
-  icon: Calculator,
+  icon: Messages,
   createdAt: new Date('2026-05-31'),
 });

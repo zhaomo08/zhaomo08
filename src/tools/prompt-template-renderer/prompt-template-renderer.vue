@@ -4,13 +4,25 @@ import { useCopy } from '@/composable/copy';
 const { t } = useI18n();
 const tt = (key: string, fallback: string) => t(`tools.prompt-template-renderer.${key}`, fallback);
 
-const template = ref(`You are an assistant for {{company.name}}.
-Answer in {{style.tone}} tone.
-Target audience: {{audience}}.`);
+const template = ref(`You are a {{assistant.role}} for {{company.name}}.
+Goal: {{task.goal}}
+Audience: {{audience.segment}}
+Return language: {{output.language}}
+Key points:
+- {{task.point1}}
+- {{task.point2}}
+CTA: {{cta.text}}`);
 const variablesJson = ref(`{
-  "company": { "name": "Acme" },
-  "style": { "tone": "friendly" },
-  "audience": "new users"
+  "assistant": { "role": "customer success assistant" },
+  "company": { "name": "Acme Cloud" },
+  "task": {
+    "goal": "announce the new analytics dashboard",
+    "point1": "real-time KPI overview",
+    "point2": "custom alerts"
+  },
+  "audience": { "segment": "startup founders" },
+  "output": { "language": "English" },
+  "cta": { "text": "Book a 15-minute demo" }
 }`);
 
 function getByPath(data: unknown, path: string): unknown {

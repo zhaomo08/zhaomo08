@@ -7,10 +7,11 @@ const tt = (key: string, fallback: string) => t(`tools.jsonl-chat-builder.${key}
 
 const model = ref('gpt-4o-mini');
 const temperature = ref(0.2);
-const systemPrompt = ref('You are a concise assistant.');
-const userInputs = ref(`Summarize the latest release notes in 5 bullet points.
-Rewrite this message to be polite and direct.
-Extract action items from this meeting note.`);
+const systemPrompt = ref('You are a concise B2B assistant. Reply with clear structure and practical next steps.');
+const userInputs = ref(`Summarize this customer feedback thread in 5 bullets.
+Rewrite this onboarding email to sound warm and direct.
+Extract action items, owners, and due dates from this meeting note.
+Generate 3 subject lines for a product launch update.`);
 
 const prompts = computed(() =>
   userInputs.value

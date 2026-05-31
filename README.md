@@ -1,53 +1,87 @@
 <picture>
     <source srcset="./.github/logo-dark.png" media="(prefers-color-scheme: light)">
     <source srcset="./.github/logo-white.png" media="(prefers-color-scheme: dark)">
-    <img src="./.github/logo-dark.png" alt="logo">
+    <img src="./.github/logo-dark.png" alt="IT-Tools logo">
 </picture>
 
 <p align="center">
-Useful tools for developer and people working in IT. <a href="https://it-tools.tech">Try it!</a>
+  为开发者和 IT 从业者准备的在线工具集，新增 AI 工具套件。<br/>
+  A curated collection of handy online tools for developers and IT professionals — with an added AI toolset.
 </p>
 
-## Functionalities and roadmap
+<p align="center">
+  <a href="https://github.com/zhaomo08/it-tools/actions/workflows/ci.yml">
+    <img src="https://github.com/zhaomo08/it-tools/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  </a>
+  <a href="https://github.com/zhaomo08/it-tools/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License: GPL-3.0" />
+  </a>
+</p>
 
-Please check the [issues](https://github.com/CorentinTh/it-tools/issues) to see if some feature listed to be implemented.
+---
 
-You have an idea of a tool? Submit a [feature request](https://github.com/CorentinTh/it-tools/issues/new/choose)!
+## 关于本项目 / About
 
-## Self host
+本仓库 fork 自 [CorentinTh/it-tools](https://github.com/CorentinTh/it-tools)，在保留原版全部工具的基础上，新增了一套专为 AI / LLM 工作流设计的工具：
 
-Self host solutions for your homelab
+This repository is a fork of [CorentinTh/it-tools](https://github.com/CorentinTh/it-tools). All original tools are preserved, with an added **AI toolset** designed for LLM workflows:
 
-**From docker hub:**
+| 工具 | 说明 |
+|------|------|
+| **LLM Token & Cost Calculator** | 本地估算 Prompt Token 数、缓存节省与调用成本 |
+| **KV Cache Calculator** | 估算 Transformer KV Cache 显存占用与前缀缓存收益 |
+| **LLM Context Planner** | 按组件规划上下文窗口（系统提示、RAG、历史、输出预留） |
+| **Prompt Variable Extractor** | 从模板中提取双花括号占位符并生成 JSON 样例 |
+| **Prompt Template Renderer** | 用 JSON 变量渲染 Prompt 模板，高亮未解析占位符 |
+| **JSONL Chat Builder** | 多行 Prompt 一键转为聊天补全 API 的 JSONL 批量请求 |
+| **JSON Output Key Checker** | 校验模型 JSON 输出是否满足必填字段 |
+
+## 本地运行 / Local Development
 
 ```sh
-docker run -d --name it-tools --restart unless-stopped -p 8080:80 corentinth/it-tools:latest
+# 安装依赖
+pnpm install
+
+# 开发模式（热重载）
+pnpm dev
+
+# 构建生产版本
+pnpm build
+
+# 运行单元测试
+pnpm test
+
+# Lint 检查
+pnpm lint
 ```
 
-**From github packages:**
+## 创建新工具 / Create a New Tool
 
 ```sh
+pnpm run script:create:tool my-tool-name
+```
+
+脚本会在 `src/tools/` 下生成模板文件并自动在 `src/tools/index.ts` 中添加导入。将其加入对应分类并开发即可。
+
+The script generates boilerplate under `src/tools/` and adds the import to `src/tools/index.ts`. Add it to the correct category and start building.
+
+## Self Host
+
+```sh
+# Docker Hub
+docker run -d --name it-tools --restart unless-stopped -p 8080:80 corentinth/it-tools:latest
+
+# GitHub Packages
 docker run -d --name it-tools --restart unless-stopped -p 8080:80 ghcr.io/corentinth/it-tools:latest
 ```
 
-**Other solutions:**
+## 推荐 IDE 配置 / IDE Setup
 
-- [Cloudron](https://www.cloudron.io/store/tech.ittools.cloudron.html)
-- [Tipi](https://www.runtipi.io/docs/apps-available)
-- [Unraid](https://unraid.net/community/apps?q=it-tools)
+[VSCode](https://code.visualstudio.com/) + 以下扩展：
 
-## Contribute
-
-### Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) with the following extensions:
-
-- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur)
-- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)（禁用 Vetur）
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [i18n Ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally)
-
-with the following settings:
 
 ```json
 {
@@ -60,73 +94,12 @@ with the following settings:
 }
 ```
 
-### Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-### Project Setup
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-pnpm test
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
-
-### Create a new tool
-
-To create a new tool, there is a script that generate the boilerplate of the new tool, simply run:
-
-```sh
-pnpm run script:create:tool my-tool-name
-```
-
-It will create a directory in `src/tools` with the correct files, and a the import in `src/tools/index.ts`. You will just need to add the imported tool in the proper category and develop the tool.
-
-## Contributors
-
-Big thanks to all the people who have already contributed!
-
-[![contributors](https://contrib.rocks/image?repo=corentinth/it-tools&refresh=1)](https://github.com/corentinth/it-tools/graphs/contributors)
-
 ## Credits
 
-Coded with ❤️ by [Corentin Thomasset](https://corentin.tech?utm_source=it-tools&utm_medium=readme).
-
-This project is continuously deployed using [vercel.com](https://vercel.com).
-
-Contributor graph is generated using [contrib.rocks](https://contrib.rocks/preview?repo=corentinth/it-tools).
-
-<a href="https://www.producthunt.com/posts/it-tools?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-it&#0045;tools" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=345793&theme=light" alt="IT&#0032;Tools - Collection&#0032;of&#0032;handy&#0032;online&#0032;tools&#0032;for&#0032;devs&#0044;&#0032;with&#0032;great&#0032;UX | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-<a href="https://www.producthunt.com/posts/it-tools?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-it&#0045;tools" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=345793&theme=light&period=daily" alt="IT&#0032;Tools - Collection&#0032;of&#0032;handy&#0032;online&#0032;tools&#0032;for&#0032;devs&#0044;&#0032;with&#0032;great&#0032;UX | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+- 原项目由 [Corentin Thomasset](https://corentin.tech) 创建，遵循 GPL-3.0 协议开源。
+- Original project created by [Corentin Thomasset](https://corentin.tech), licensed under GPL-3.0.
+- AI 工具套件由本 fork 新增。/ AI toolset added in this fork.
+- 持续部署由 [Vercel](https://vercel.com) 提供。/ Continuously deployed via [Vercel](https://vercel.com).
 
 ## License
 

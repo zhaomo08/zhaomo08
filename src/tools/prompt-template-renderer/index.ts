@@ -1,4 +1,4 @@
-import { FileText } from '@vicons/tabler';
+import { Template } from '@vicons/tabler';
 import { defineTool } from '../tool';
 import { translate } from '@/plugins/i18n.plugin';
 
@@ -8,6 +8,6 @@ export const tool = defineTool({
   description: translate('tools.prompt-template-renderer.description'),
   keywords: ['ai', 'prompt', 'template', 'render', 'variable', 'placeholder', 'llm'],
   component: () => import('./prompt-template-renderer.vue'),
-  icon: FileText,
+  icon: Template,
   createdAt: new Date('2026-05-31'),
 });

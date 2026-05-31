@@ -8,21 +8,35 @@ import { toolsWithCategory } from './index';
 export const useToolStore = defineStore('tools', () => {
   const favoriteToolsName = useStorage('favoriteToolsName', []) as Ref<string[]>;
   const { t } = useI18n();
+  const aiCategoryName = computed(() => t('tools.categories.ai', 'AI'));
 
-  const tools = computed<ToolWithCategory[]>(() => toolsWithCategory.map((tool) => {
-    const toolI18nKey = tool.path.replace(/\//g, '');
+  const tools = computed<ToolWithCategory[]>(() => {
+    const localizedTools = toolsWithCategory.map((tool) => {
+      const toolI18nKey = tool.path.replace(/\//g, '');
 
-    return ({
-      ...tool,
-      path: tool.path,
-      name: t(`tools.${toolI18nKey}.title`, tool.name),
-      description: t(`tools.${toolI18nKey}.description`, tool.description),
-      category: t(`tools.categories.${tool.category.toLowerCase()}`, tool.category),
+      return ({
+        ...tool,
+        path: tool.path,
+        name: t(`tools.${toolI18nKey}.title`, tool.name),
+        description: t(`tools.${toolI18nKey}.description`, tool.description),
+        category: t(`tools.categories.${tool.category.toLowerCase()}`, tool.category),
+      });
     });
-  }));
+
+    return localizedTools.sort((a, b) => {
+      const aIsAi = a.category === aiCategoryName.value;
+      const bIsAi = b.category === aiCategoryName.value;
+
+      if (aIsAi === bIsAi) {
+        return 0;
+      }
+
+      return aIsAi ? -1 : 1;
+    });
+  });
 
   const toolsByCategory = computed<ToolCategory[]>(() => {
-    return _.chain(tools.value)
+    const categories = _.chain(tools.value)
       .groupBy('category')
       .map((components, name, path) => ({
         name,
@@ -30,7 +44,20 @@ export const useToolStore = defineStore('tools', () => {
         components,
       }))
       .value();
+
+    return categories.sort((a, b) => {
+      const aIsAi = a.name === aiCategoryName.value;
+      const bIsAi = b.name === aiCategoryName.value;
+
+      if (aIsAi === bIsAi) {
+        return 0;
+      }
+
+      return aIsAi ? -1 : 1;
+    });
   });
+
+  const aiTools = computed(() => tools.value.filter(tool => tool.category === aiCategoryName.value));
 
   const favoriteTools = computed(() => {
     return favoriteToolsName.value
@@ -42,6 +69,7 @@ export const useToolStore = defineStore('tools', () => {
     tools,
     favoriteTools,
     toolsByCategory,
+    aiTools,
     newTools: computed(() => tools.value.filter(({ isNew }) => isNew)),
 
     addToolToFavorites({ tool }: { tool: MaybeRef<Tool> }) {

@@ -7,11 +7,14 @@ const tt = (key: string, fallback: string) => t(`tools.json-output-key-checker.$
 const requiredKeysInput = ref(`title
 summary
 priority
+owner
 action_items`);
 const outputJson = ref(`{
-  "title": "Release follow-up",
-  "summary": "Need to align with QA.",
-  "priority": "high"
+  "title": "Release readiness review",
+  "summary": "QA blockers cleared, docs still pending.",
+  "priority": "high",
+  "owner": "ops-team",
+  "next_sync": "2026-06-02"
 }`);
 
 const requiredKeys = computed(() =>

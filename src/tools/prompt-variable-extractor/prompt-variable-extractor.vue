@@ -4,9 +4,35 @@ import { useCopy } from '@/composable/copy';
 const { t } = useI18n();
 const tt = (key: string, fallback: string) => t(`tools.prompt-variable-extractor.${key}`, fallback);
 
-const template = ref(`Write a {{tone}} product launch email for {{product_name}}.
+const template = ref(`Role: {{role}}
+Task: Draft a launch update for {{product.name}} in {{language}}.
 Audience: {{audience.segment}}
-Keep it under {{max_words}} words.`);
+Constraints:
+- Keep under {{constraints.max_words}} words
+- Include CTA: {{cta}}
+- Mention release date: {{timeline.release_date}}`);
+
+function getSampleValue(variable: string): string {
+  const normalized = variable.toLowerCase();
+
+  if (normalized.includes('max') || normalized.includes('count') || normalized.includes('num') || normalized.includes('words')) {
+    return '120';
+  }
+  if (normalized.includes('date') || normalized.includes('time')) {
+    return '2026-06-15';
+  }
+  if (normalized.includes('language') || normalized.includes('locale')) {
+    return 'zh-CN';
+  }
+  if (normalized.includes('role')) {
+    return 'Senior Product Marketing Manager';
+  }
+  if (normalized.includes('tone') || normalized.includes('style')) {
+    return 'clear and confident';
+  }
+
+  return 'example-value';
+}
 
 const variables = computed(() => {
   const pattern = /{{\s*([A-Za-z_][A-Za-z0-9_.-]*)\s*}}/g;
@@ -24,7 +50,7 @@ const variables = computed(() => {
 });
 
 const jsonExample = computed(() => {
-  const obj = Object.fromEntries(variables.value.map(variable => [variable, '']));
+  const obj = Object.fromEntries(variables.value.map(variable => [variable, getSampleValue(variable)]));
   return JSON.stringify(obj, null, 2);
 });
 
