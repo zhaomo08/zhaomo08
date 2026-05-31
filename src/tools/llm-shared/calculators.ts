@@ -8,7 +8,7 @@ export interface TokenEstimate {
 export function estimateTokens(text: string): TokenEstimate {
   const characters = [...text].length;
   const words = text.trim().match(/[A-Za-z0-9_]+(?:['-][A-Za-z0-9_]+)?/g)?.length ?? 0;
-  const cjkCharacters = text.match(/[\u3400-\u9fff\uf900-\ufaff]/g)?.length ?? 0;
+  const cjkCharacters = text.match(/[\u3400-\u9FFF\uF900-\uFAFF]/g)?.length ?? 0;
   const nonCjkCharacters = Math.max(0, characters - cjkCharacters);
 
   return {

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { costForMillionTokens, formatBytes, formatMoney, formatNumber } from '../llm-shared/calculators';
 
+const { t } = useI18n();
+const tt = (key: string, fallback: string) => t(`tools.kv-cache-calculator.${key}`, fallback);
+
 const presets = computed(() => ([
   { label: tt('options.presets.custom', 'Custom transformer'), value: 'custom', layers: 32, kvHeads: 8, headDim: 128 },
   { label: tt('options.presets.llama8b', 'Llama-style 8B GQA'), value: 'llama8b', layers: 32, kvHeads: 8, headDim: 128 },
@@ -30,8 +33,6 @@ const cacheHitPercent = ref(75);
 const inputPrice = ref(1);
 const cachedInputPrice = ref(0.1);
 const outputPrice = ref(5);
-const { t } = useI18n();
-const tt = (key: string, fallback: string) => t(`tools.kv-cache-calculator.${key}`, fallback);
 
 watch(preset, (value) => {
   const next = presets.value.find(item => item.value === value);

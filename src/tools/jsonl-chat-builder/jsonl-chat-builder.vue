@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useCopy } from '@/composable/copy';
 import { formatNumber } from '../llm-shared/calculators';
+import { useCopy } from '@/composable/copy';
 
 const { t } = useI18n();
 const tt = (key: string, fallback: string) => t(`tools.jsonl-chat-builder.${key}`, fallback);
