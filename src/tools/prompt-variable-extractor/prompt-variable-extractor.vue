@@ -52,7 +52,7 @@ const { copy: copyJson } = useCopy({
         multiline
         rows="10"
         raw-text
-        :placeholder="tt('placeholders.template', 'Paste prompt template text with {{variable}} placeholders...')"
+        :placeholder="tt('placeholders.template', 'Paste prompt template text with double-curly placeholders...')"
       />
     </c-card>
 
@@ -62,7 +62,7 @@ const { copy: copyJson } = useCopy({
       </div>
 
       <div v-if="variables.length === 0" class="empty">
-        {{ tt('messages.noVariables', 'No {{variable}} placeholders found.') }}
+        {{ tt('messages.noVariables', 'No double-curly placeholders found.') }}
       </div>
 
       <div v-else class="chips">

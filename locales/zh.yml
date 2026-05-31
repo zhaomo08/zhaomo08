@@ -219,18 +219,18 @@ tools:
 
   prompt-variable-extractor:
     title: Prompt 变量提取器
-    description: 从提示词模板中提取 {{variable}} 占位符，并生成可直接填充的 JSON 载荷骨架。
+    description: 从提示词模板中提取双花括号占位符，并生成可直接填充的 JSON 载荷骨架。
     sections:
       input: 提示词模板
       variables: 检测到的变量
       json: JSON 示例载荷
     placeholders:
-      template: 粘贴包含 {{variable}} 占位符的提示词模板...
+      template: 粘贴包含双花括号占位符的提示词模板...
     actions:
       copyVariables: 复制变量列表
       copyJson: 复制 JSON
     messages:
-      noVariables: 未找到 {{variable}} 占位符。
+      noVariables: 未找到双花括号占位符。
       variablesCopied: 变量列表已复制到剪贴板
       jsonCopied: JSON 已复制到剪贴板
 
@@ -242,7 +242,7 @@ tools:
       variables: 变量 JSON
       result: 渲染结果
     placeholders:
-      template: 在模板中使用 {{path.to.value}} 占位符...
+      template: 在模板中使用点路径占位符...
       variablesJson: 提供用于替换占位符的 JSON 对象...
     metrics:
       detected: 检测到的占位符

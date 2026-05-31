@@ -220,18 +220,18 @@ tools:
 
   prompt-variable-extractor:
     title: Prompt variable extractor
-    description: Extract {{variable}} placeholders from prompt templates and generate a JSON payload scaffold.
+    description: Extract double-curly placeholders from prompt templates and generate a JSON payload scaffold.
     sections:
       input: Prompt template
       variables: Detected variables
       json: JSON example payload
     placeholders:
-      template: Paste prompt template text with {{variable}} placeholders...
+      template: Paste prompt template text with double-curly placeholders...
     actions:
       copyVariables: Copy variables
       copyJson: Copy JSON
     messages:
-      noVariables: No {{variable}} placeholders found.
+      noVariables: No double-curly placeholders found.
       variablesCopied: Variables copied to the clipboard
       jsonCopied: JSON copied to the clipboard
 
@@ -243,7 +243,7 @@ tools:
       variables: Variables JSON
       result: Rendered result
     placeholders:
-      template: Use {{path.to.value}} placeholders in your template...
+      template: Use dot-path placeholders in your template...
       variablesJson: Provide a JSON object for placeholder values...
     metrics:
       detected: Detected placeholders
