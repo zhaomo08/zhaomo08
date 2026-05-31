@@ -37,169 +37,407 @@ const remainingContext = computed(() => Math.max(0, contextWindow.value - estima
 </script>
 
 <template>
-  <div class="llm-grid">
-    <c-card class="panel main-panel">
-      <div class="eyebrow">
-        {{ tt('sections.promptPayload', 'Prompt payload') }}
+  <div class="llm-root">
+
+    <!-- ── Row 1: Prompt + Stats + Cost ── -->
+    <div class="top-row">
+
+      <!-- Prompt textarea -->
+      <div class="panel prompt-panel">
+        <div class="panel-head">
+          <span class="dot dot-green" />
+          <span class="panel-label">{{ tt('sections.promptPayload', 'Prompt payload') }}</span>
+        </div>
+        <n-input
+          v-model:value="prompt"
+          type="textarea"
+          :autosize="{ minRows: 10, maxRows: 20 }"
+          :placeholder="tt('placeholders.prompt', 'Paste a prompt, system message, tool schema, or RAG context...')"
+        />
       </div>
-      <n-input
-        v-model:value="prompt"
-        type="textarea"
-        :autosize="{ minRows: 14 }"
-        :placeholder="tt('placeholders.prompt', 'Paste a prompt, system message, tool schema, or RAG context...')"
-      />
-    </c-card>
 
-    <div class="side-stack">
-      <c-card class="panel">
-        <div class="eyebrow">
-          {{ tt('sections.tokenEstimate', 'Token estimate') }}
-        </div>
-        <div class="metric-row">
-          <span>{{ tt('metrics.inputTokens', 'Input tokens') }}</span>
-          <strong>{{ formatNumber(estimate.tokens) }}</strong>
-        </div>
-        <div class="metric-row">
-          <span>{{ tt('metrics.characters', 'Characters') }}</span>
-          <strong>{{ formatNumber(estimate.characters) }}</strong>
-        </div>
-        <div class="metric-row">
-          <span>{{ tt('metrics.words', 'Words') }}</span>
-          <strong>{{ formatNumber(estimate.words) }}</strong>
-        </div>
-        <div class="metric-row">
-          <span>{{ tt('metrics.cjkChars', 'CJK chars') }}</span>
-          <strong>{{ formatNumber(estimate.cjkCharacters) }}</strong>
-        </div>
-      </c-card>
+      <!-- Right column: token stats + cost -->
+      <div class="right-col">
 
-      <c-card class="panel">
-        <div class="eyebrow">
-          {{ tt('sections.costResult', 'Cost result') }}
+        <!-- Token stats -->
+        <div class="panel stats-panel">
+          <div class="panel-head">
+            <span class="dot dot-blue" />
+            <span class="panel-label">{{ tt('sections.tokenEstimate', 'Token Estimate') }}</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-item primary">
+              <span class="stat-label">{{ tt('metrics.inputTokens', 'Input tokens') }}</span>
+              <span class="stat-value mono">{{ formatNumber(estimate.tokens) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">{{ tt('metrics.characters', 'Chars') }}</span>
+              <span class="stat-value mono">{{ formatNumber(estimate.characters) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">{{ tt('metrics.words', 'Words') }}</span>
+              <span class="stat-value mono">{{ formatNumber(estimate.words) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">{{ tt('metrics.cjkChars', 'CJK') }}</span>
+              <span class="stat-value mono">{{ formatNumber(estimate.cjkCharacters) }}</span>
+            </div>
+          </div>
         </div>
-        <div class="hero-number">
-          {{ formatMoney(costPerCall) }}
+
+        <!-- Cost result -->
+        <div class="panel cost-panel">
+          <div class="panel-head">
+            <span class="dot dot-amber" />
+            <span class="panel-label">{{ tt('sections.costResult', 'Cost Result') }}</span>
+          </div>
+          <div class="hero-block">
+            <span class="hero-value mono">{{ formatMoney(costPerCall) }}</span>
+            <span class="hero-sub">{{ tt('metrics.perCall', 'per call') }}</span>
+          </div>
+          <div class="cost-rows">
+            <div class="cost-row">
+              <span>{{ tt('metrics.runRate30d', '30-day run-rate') }}</span>
+              <span class="mono">{{ formatMoney(monthlyCost) }}</span>
+            </div>
+            <div class="cost-row">
+              <span>{{ tt('metrics.remainingContext', 'Remaining ctx') }}</span>
+              <span class="mono">{{ formatNumber(remainingContext) }}</span>
+            </div>
+          </div>
+          <div class="ctx-bar-wrap">
+            <n-progress type="line" :percentage="contextUsage" :show-indicator="false" color="#22c55e" />
+            <div class="ctx-bar-label">
+              <span>{{ tt('metrics.contextUsage', 'Context') }}</span>
+              <span class="mono">{{ contextUsage.toFixed(1) }}%</span>
+            </div>
+          </div>
         </div>
-        <div class="muted">
-          {{ tt('metrics.perCall', 'per call') }}
-        </div>
-        <n-divider />
-        <div class="metric-row">
-          <span>{{ tt('metrics.runRate30d', '30 day run-rate') }}</span>
-          <strong>{{ formatMoney(monthlyCost) }}</strong>
-        </div>
-        <div class="metric-row">
-          <span>{{ tt('metrics.remainingContext', 'Remaining context') }}</span>
-          <strong>{{ formatNumber(remainingContext) }}</strong>
-        </div>
-        <n-progress type="line" :percentage="contextUsage" :show-indicator="false" />
-      </c-card>
+
+      </div>
     </div>
 
-    <c-card class="panel controls">
-      <n-grid :cols="1" :x-gap="16" :y-gap="8" responsive="screen" item-responsive>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.expectedOutputTokens', 'Expected output tokens')">
+    <!-- ── Row 2: Controls ── -->
+    <div class="panel controls-panel">
+      <div class="panel-head">
+        <span class="dot dot-slate" />
+        <span class="panel-label">{{ tt('sections.parameters', 'Parameters') }}</span>
+      </div>
+
+      <div class="controls-grid">
+        <!-- Col A: call params -->
+        <div class="ctrl-group">
+          <div class="ctrl-group-label">{{ tt('sections.callParams', 'Call params') }}</div>
+          <div class="field-block">
+            <label>{{ tt('fields.expectedOutputTokens', 'Output tokens') }}</label>
             <n-input-number v-model:value="expectedOutputTokens" :min="0" :step="100" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.callsPerDay', 'Calls per day')">
+          </div>
+          <div class="field-block">
+            <label>{{ tt('fields.callsPerDay', 'Calls / day') }}</label>
             <n-input-number v-model:value="callsPerDay" :min="1" :step="10" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.contextWindow', 'Context window')">
+          </div>
+          <div class="field-block">
+            <label>{{ tt('fields.contextWindow', 'Context window') }}</label>
             <n-input-number v-model:value="contextWindow" :min="1000" :step="1000" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="`${tt('fields.cachedInputHit', 'Cached input hit')} (${cachedInputPercent}%)`">
+          </div>
+        </div>
+
+        <!-- Col B: cache + batch sliders -->
+        <div class="ctrl-group">
+          <div class="ctrl-group-label">{{ tt('sections.cacheAndBatch', 'Cache & batch') }}</div>
+          <div class="field-block">
+            <label>{{ tt('fields.cachedInputHit', 'Cached hit') }} <strong class="mono">{{ cachedInputPercent }}%</strong></label>
             <n-slider v-model:value="cachedInputPercent" :min="0" :max="100" :step="1" />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.inputPrice', 'Input $ / 1M tokens')">
-            <n-input-number v-model:value="inputPrice" :min="0" :step="0.1" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.cachedInputPrice', 'Cached input $ / 1M')">
-            <n-input-number v-model:value="cachedInputPrice" :min="0" :step="0.1" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="tt('fields.outputPrice', 'Output $ / 1M tokens')">
-            <n-input-number v-model:value="outputPrice" :min="0" :step="0.1" w-full />
-          </n-form-item>
-        </n-gi>
-        <n-gi span="1 m:6">
-          <n-form-item :label="`${tt('fields.batchDiscount', 'Batch discount')} (${batchDiscountPercent}%)`">
+          </div>
+          <div class="field-block" style="margin-top: 8px;">
+            <label>{{ tt('fields.batchDiscount', 'Batch discount') }} <strong class="mono">{{ batchDiscountPercent }}%</strong></label>
             <n-slider v-model:value="batchDiscountPercent" :min="0" :max="90" :step="5" />
-          </n-form-item>
-        </n-gi>
-      </n-grid>
-    </c-card>
+          </div>
+        </div>
+
+        <!-- Col C: pricing -->
+        <div class="ctrl-group">
+          <div class="ctrl-group-label">{{ tt('sections.pricing', 'Pricing ($ / 1M)') }}</div>
+          <div class="field-block">
+            <label>{{ tt('fields.inputPrice', 'Input') }}</label>
+            <n-input-number v-model:value="inputPrice" :min="0" :step="0.1" w-full />
+          </div>
+          <div class="field-block">
+            <label>{{ tt('fields.cachedInputPrice', 'Cached input') }}</label>
+            <n-input-number v-model:value="cachedInputPrice" :min="0" :step="0.1" w-full />
+          </div>
+          <div class="field-block">
+            <label>{{ tt('fields.outputPrice', 'Output') }}</label>
+            <n-input-number v-model:value="outputPrice" :min="0" :step="0.1" w-full />
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <style scoped lang="less">
-.llm-grid {
+/* ── Root ── */
+.llm-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Top row ── */
+.top-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 16px;
+  grid-template-columns: 1fr 300px;
+  gap: 14px;
+  align-items: start;
 }
 
-.main-panel,
-.controls {
-  min-width: 0;
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.controls {
-  grid-column: 1 / -1;
-}
-
-.side-stack {
-  display: grid;
-  gap: 16px;
-}
-
+/* ── Panel base ── */
 .panel {
-  border-left: 4px solid #18a058;
+  padding: 18px 20px 20px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+
+  .dark & {
+    background: #161b22;
+    border-color: #30363d;
+  }
 }
 
-.eyebrow {
-  margin-bottom: 10px;
-  color: #64748b;
-  font-size: 12px;
+/* ── Panel header ── */
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.panel-label {
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: #6b7280;
+  .dark & { color: #6e7681; }
 }
 
-.metric-row {
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-green { background: #22c55e; }
+.dot-blue  { background: #3b82f6; }
+.dot-amber { background: #f59e0b; }
+.dot-slate { background: #64748b; }
+
+/* ── Stats panel ── */
+.stats-panel {
+  border-top: 3px solid #3b82f6;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  .dark & { background: #30363d; }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: #fff;
+  .dark & { background: #161b22; }
+
+  &.primary {
+    grid-column: span 2;
+    background: #f0fdf4;
+    .dark & { background: rgba(34,197,94,0.06); }
+
+    .stat-value { font-size: 24px; color: #15803d; .dark & { color: #4ade80; } }
+  }
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  .dark & { color: #6e7681; }
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  .dark & { color: #e6edf3; }
+}
+
+/* ── Cost panel ── */
+.cost-panel {
+  border-top: 3px solid #f59e0b;
+}
+
+.hero-block {
+  margin-bottom: 14px;
+}
+
+.hero-value {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #111827;
+  .dark & { color: #e6edf3; }
+}
+
+.hero-sub {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  .dark & { color: #6e7681; }
+}
+
+.cost-rows {
+  margin-bottom: 12px;
+}
+
+.cost-row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  margin: 9px 0;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  .dark & { border-color: #21262d; color: #8b949e; }
 }
 
-.metric-row strong {
-  font-variant-numeric: tabular-nums;
+.ctx-bar-wrap {
+  margin-top: 4px;
 }
 
-.hero-number {
-  font-size: 34px;
-  font-weight: 800;
-  line-height: 1.05;
+.ctx-bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+  .dark & { color: #6e7681; }
 }
 
-.muted {
-  color: #64748b;
+/* ── Controls panel ── */
+.controls-panel {
+  border-top: 3px solid #64748b;
 }
 
-@media (max-width: 900px) {
-  .llm-grid {
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 28px;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 28px;
+  border-right: 1px solid #f0f0f0;
+  .dark & { border-color: #21262d; }
+
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+}
+
+.ctrl-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 2px;
+  .dark & { color: #6e7681; }
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    .dark & { color: #8b949e; }
+  }
+}
+
+.mono {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .top-row {
     grid-template-columns: 1fr;
+  }
+
+  .controls-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ctrl-group:nth-child(2) {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .ctrl-group:last-child {
+    grid-column: span 2;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 14px;
+    .dark & { border-color: #21262d; }
+  }
+}
+
+@media (max-width: 520px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ctrl-group {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 14px;
+    .dark & { border-color: #21262d; }
+
+    &:last-child { border-bottom: none; padding-bottom: 0; }
+  }
+
+  .ctrl-group:last-child {
+    grid-column: span 1;
   }
 }
 </style>
