@@ -51,125 +51,206 @@ const { copy: copyJsonl } = useCopy({
 </script>
 
 <template>
-  <div class="layout">
-    <c-card>
-      <div class="eyebrow">
-        {{ tt('sections.config', 'Batch config') }}
-      </div>
-      <n-grid :cols="1" :x-gap="12" :y-gap="8" responsive="screen">
-        <n-gi>
-          <n-form-item :label="tt('fields.model', 'Model')">
+  <div class="builder-root">
+    <!-- Row 1: Config left · Prompts right -->
+    <div class="top-row">
+      <div class="panel config-panel">
+        <div class="panel-head">
+          <span class="dot dot-rose" />
+          <span class="panel-label">{{ tt('sections.config', 'Batch Config') }}</span>
+        </div>
+
+        <!-- Model + Temp 2-col -->
+        <div class="field-row">
+          <div class="field-block">
+            <label>{{ tt('fields.model', 'Model') }}</label>
             <c-input-text v-model:value="model" raw-text />
-          </n-form-item>
-        </n-gi>
-        <n-gi>
-          <n-form-item :label="tt('fields.temperature', 'Temperature')">
+          </div>
+          <div class="field-block">
+            <label>{{ tt('fields.temperature', 'Temperature') }}</label>
             <n-input-number v-model:value="temperature" :min="0" :max="2" :step="0.1" w-full />
-          </n-form-item>
-        </n-gi>
-      </n-grid>
-
-      <n-form-item :label="tt('fields.systemPrompt', 'System prompt')">
-        <c-input-text v-model:value="systemPrompt" multiline rows="4" raw-text />
-      </n-form-item>
-    </c-card>
-
-    <c-card>
-      <div class="eyebrow">
-        {{ tt('sections.userInputs', 'User prompts (one per line)') }}
-      </div>
-      <c-input-text
-        v-model:value="userInputs"
-        multiline
-        rows="11"
-        raw-text
-        :placeholder="tt('placeholders.userInputs', 'One user prompt per line...')"
-      />
-    </c-card>
-
-    <c-card class="full">
-      <div class="eyebrow">
-        {{ tt('sections.output', 'JSONL output') }}
-      </div>
-
-      <div class="summary">
-        <div>
-          <span>{{ tt('metrics.requests', 'Requests') }}</span>
-          <strong>{{ formatNumber(prompts.length) }}</strong>
+          </div>
         </div>
-        <div>
-          <span>{{ tt('metrics.characters', 'Characters') }}</span>
-          <strong>{{ formatNumber(estimatedChars) }}</strong>
+
+        <!-- System prompt -->
+        <div class="field-block mt">
+          <label>{{ tt('fields.systemPrompt', 'System prompt') }}</label>
+          <c-input-text v-model:value="systemPrompt" rows="5" raw-text multiline />
         </div>
       </div>
 
+      <div class="panel prompts-panel">
+        <div class="panel-head">
+          <span class="dot dot-sky" />
+          <span class="panel-label">{{ tt('sections.userInputs', 'User Prompts') }}</span>
+          <span class="mono prompt-count">{{ prompts.length }}</span>
+        </div>
+        <c-input-text
+          v-model:value="userInputs"
+          multiline
+          rows="10"
+          raw-text
+          :placeholder="tt('placeholders.userInputs', 'One user prompt per line...')"
+        />
+      </div>
+    </div>
+
+    <!-- Row 2: Output -->
+    <div class="panel output-panel">
+      <div class="panel-head">
+        <span class="dot dot-slate" />
+        <span class="panel-label">{{ tt('sections.output', 'JSONL Output') }}</span>
+        <div class="output-stats">
+          <span class="ostat">
+            <span class="mono ostat-n">{{ formatNumber(prompts.length) }}</span>
+            <span class="ostat-l">{{ tt('metrics.requests', 'requests') }}</span>
+          </span>
+          <span class="ostat-sep">·</span>
+          <span class="ostat">
+            <span class="ostat-n mono">{{ formatNumber(estimatedChars) }}</span>
+            <span class="ostat-l">{{ tt('metrics.characters', 'chars') }}</span>
+          </span>
+        </div>
+      </div>
       <c-input-text
         :value="jsonlOutput"
         multiline
-        rows="12"
+        rows="10"
         raw-text
         readonly
       />
-
-      <div class="actions">
+      <div class="panel-actions">
         <c-button :disabled="!jsonlOutput" @click="copyJsonl()">
           {{ tt('actions.copyJsonl', 'Copy JSONL') }}
         </c-button>
       </div>
-    </c-card>
+    </div>
   </div>
 </template>
 
 <style scoped lang="less">
-.layout {
+.builder-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.top-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
 }
 
-.full {
-  grid-column: 1 / -1;
+.panel {
+  padding: 18px 20px 20px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  .dark & { background: #161b22; border-color: #30363d; }
 }
 
-.eyebrow {
-  margin-bottom: 10px;
-  color: #64748b;
-  font-size: 12px;
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.panel-label {
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: #6b7280;
+  .dark & { color: #6e7681; }
 }
 
-.summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%; flex-shrink: 0;
 }
+.dot-rose  { background: #f43f5e; }
+.dot-sky   { background: #0ea5e9; }
+.dot-slate { background: #64748b; }
 
-.summary > div {
-  border: 1px solid rgb(148 163 184 / 0.35);
-  border-radius: 8px;
-  padding: 12px;
-}
+.config-panel  { border-top: 3px solid #f43f5e; }
+.prompts-panel { border-top: 3px solid #0ea5e9; }
+.output-panel  { border-top: 3px solid #64748b; }
 
-.summary span {
-  display: block;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.summary strong {
+/* prompt count badge */
+.prompt-count {
   font-size: 20px;
+  font-weight: 700;
+  color: #0ea5e9;
+  line-height: 1;
 }
 
-.actions {
+/* 2-col field row */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    .dark & { color: #8b949e; }
+  }
+  &.mt { margin-top: 12px; }
+}
+
+/* Output stats */
+.output-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.ostat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.ostat-n {
+  font-size: 15px;
+  font-weight: 700;
+  color: #22c55e;
+  .dark & { color: #4ade80; }
+}
+
+.ostat-l {
+  color: #9ca3af;
+  .dark & { color: #6e7681; }
+}
+
+.ostat-sep {
+  color: #d1d5db;
+  .dark & { color: #30363d; }
+}
+
+.panel-actions {
   margin-top: 12px;
 }
 
-@media (max-width: 900px) {
-  .layout,
-  .summary {
-    grid-template-columns: 1fr;
-  }
+.mono {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+@media (max-width: 860px) {
+  .top-row { grid-template-columns: 1fr; }
+  .output-stats { margin-left: 0; }
 }
 </style>

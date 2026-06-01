@@ -91,136 +91,217 @@ const { copy: copyRendered } = useCopy({
 </script>
 
 <template>
-  <div class="layout">
-    <c-card>
-      <div class="eyebrow">
-        {{ tt('sections.template', 'Prompt template') }}
-      </div>
-      <c-input-text
-        v-model:value="template"
-        multiline
-        rows="8"
-        raw-text
-        :placeholder="tt('placeholders.template', 'Use {{path.to.value}} placeholders in your template...')"
-      />
-    </c-card>
-
-    <c-card>
-      <div class="eyebrow">
-        {{ tt('sections.variables', 'Variables JSON') }}
-      </div>
-      <c-input-text
-        v-model:value="variablesJson"
-        multiline
-        rows="8"
-        raw-text
-        :placeholder="tt('placeholders.variablesJson', 'Provide a JSON object for placeholder values...')"
-      />
-      <n-alert v-if="!parsedVariables.isValid" type="error" mt-10px>
-        {{ tt('messages.invalidJson', 'Invalid JSON:') }} {{ parsedVariables.error }}
-      </n-alert>
-    </c-card>
-
-    <c-card class="full">
-      <div class="eyebrow">
-        {{ tt('sections.result', 'Rendered result') }}
-      </div>
-
-      <div class="summary">
-        <div>
-          <span>{{ tt('metrics.detected', 'Detected placeholders') }}</span>
-          <strong>{{ placeholders.length }}</strong>
+  <div class="renderer-root">
+    <!-- Row 1: Template + Variables side by side -->
+    <div class="top-row">
+      <div class="panel template-panel">
+        <div class="panel-head">
+          <span class="dot dot-indigo" />
+          <span class="panel-label">{{ tt('sections.template', 'Prompt Template') }}</span>
         </div>
-        <div>
-          <span>{{ tt('metrics.unresolved', 'Unresolved placeholders') }}</span>
-          <strong :class="{ danger: unresolvedKeys.length > 0 }">{{ unresolvedKeys.length }}</strong>
+        <c-input-text
+          v-model:value="template"
+          multiline
+          rows="10"
+          raw-text
+          :placeholder="tt('placeholders.template', 'Use {{path.to.value}} placeholders...')"
+        />
+      </div>
+
+      <div class="panel vars-panel">
+        <div class="panel-head">
+          <span class="dot dot-cyan" />
+          <span class="panel-label">{{ tt('sections.variables', 'Variables JSON') }}</span>
+        </div>
+        <c-input-text
+          v-model:value="variablesJson"
+          multiline
+          rows="10"
+          raw-text
+          :placeholder="tt('placeholders.variablesJson', 'Paste JSON object here...')"
+        />
+        <n-alert v-if="!parsedVariables.isValid" type="error" mt-10px size="small">
+          {{ tt('messages.invalidJson', 'Invalid JSON:') }} {{ parsedVariables.error }}
+        </n-alert>
+      </div>
+    </div>
+
+    <!-- Row 2: Rendered result -->
+    <div class="panel result-panel">
+      <div class="panel-head">
+        <span class="dot dot-green" />
+        <span class="panel-label">{{ tt('sections.result', 'Rendered Result') }}</span>
+
+        <!-- Inline stats -->
+        <div class="stat-pills">
+          <span class="stat-pill">
+            <span class="mono stat-n">{{ placeholders.length }}</span>
+            <span class="stat-l">{{ tt('metrics.detected', 'detected') }}</span>
+          </span>
+          <span class="stat-sep">·</span>
+          <span class="stat-pill" :class="{ 'pill-warn': unresolvedKeys.length > 0 }">
+            <span class="stat-n mono">{{ unresolvedKeys.length }}</span>
+            <span class="stat-l">{{ tt('metrics.unresolved', 'unresolved') }}</span>
+          </span>
         </div>
       </div>
 
-      <div v-if="unresolvedKeys.length > 0" class="chips">
-        <n-tag v-for="key in unresolvedKeys" :key="key" type="warning" round>
-          {{ key }}
-        </n-tag>
+      <!-- Unresolved key chips -->
+      <div v-if="unresolvedKeys.length > 0" class="unresolved-row">
+        <span class="unresolved-label">{{ tt('metrics.unresolved', 'Unresolved') }}:</span>
+        <span v-for="key in unresolvedKeys" :key="key" class="warn-chip">{{ key }}</span>
       </div>
 
       <c-input-text
         :value="renderedPrompt"
         multiline
-        rows="8"
+        rows="9"
         raw-text
         readonly
       />
 
-      <div class="actions">
+      <div class="panel-actions">
         <c-button :disabled="!renderedPrompt" @click="copyRendered()">
           {{ tt('actions.copyRendered', 'Copy rendered prompt') }}
         </c-button>
       </div>
-    </c-card>
+    </div>
   </div>
 </template>
 
 <style scoped lang="less">
-.layout {
+.renderer-root {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.top-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
 }
 
-.full {
-  grid-column: 1 / -1;
+/* Panel base */
+.panel {
+  padding: 18px 20px 20px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  .dark & { background: #161b22; border-color: #30363d; }
 }
 
-.eyebrow {
-  margin-bottom: 10px;
-  color: #64748b;
-  font-size: 12px;
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.panel-label {
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: #6b7280;
+  .dark & { color: #6e7681; }
 }
 
-.summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%; flex-shrink: 0;
+}
+.dot-indigo { background: #6366f1; }
+.dot-cyan   { background: #06b6d4; }
+.dot-green  { background: #22c55e; }
+
+/* Panel accents */
+.template-panel { border-top: 3px solid #6366f1; }
+.vars-panel     { border-top: 3px solid #06b6d4; }
+.result-panel   { border-top: 3px solid #22c55e; }
+
+/* Stats pills */
+.stat-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
 }
 
-.summary > div {
-  border: 1px solid rgb(148 163 184 / 0.35);
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.summary span {
-  display: block;
+.stat-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
   font-size: 12px;
-  color: #64748b;
 }
 
-.summary strong {
-  font-size: 20px;
+.stat-n {
+  font-size: 15px;
+  font-weight: 700;
+  color: #22c55e;
+  .dark & { color: #4ade80; }
 }
 
-.danger {
-  color: #dc2626;
+.stat-l {
+  color: #9ca3af;
+  .dark & { color: #6e7681; }
 }
 
-.chips {
+.pill-warn .stat-n {
+  color: #f59e0b;
+  .dark & { color: #fbbf24; }
+}
+
+.stat-sep {
+  color: #d1d5db;
+  .dark & { color: #30363d; }
+}
+
+/* Unresolved chips row */
+.unresolved-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   margin-bottom: 12px;
 }
 
-.actions {
+.unresolved-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #92400e;
+  .dark & { color: #fbbf24; }
+}
+
+.warn-chip {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Space Mono', monospace;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #b45309;
+  .dark & { color: #fbbf24; }
+}
+
+.panel-actions {
   margin-top: 12px;
 }
 
-@media (max-width: 900px) {
-  .layout,
-  .summary {
-    grid-template-columns: 1fr;
-  }
+.mono {
+  font-family: 'Space Mono', monospace;
+}
+
+@media (max-width: 860px) {
+  .top-row { grid-template-columns: 1fr; }
+  .stat-pills { margin-left: 0; }
 }
 </style>
